@@ -5,6 +5,6 @@ import 'package:flutter_application_1/screens/register_screen.dart';
 Map<String, WidgetBuilder> getApplicationRoutes() {
   return <String, WidgetBuilder>{
     '/register': (BuildContext context) => const RegisterScreen(),
-    '/dash': (BuildContext context) => const DashboardScreen(),
+    '/dash': (BuildContext context) => DashboardScreen(),
   };
 }
