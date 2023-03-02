@@ -90,6 +90,16 @@ class _LoginScreenState extends State<LoginScreen> {
           txtRegister: txtRegister,
           isLoading: isLoading,
         ),
+        tablet: TabletLoginScreen(
+            imgLogo: imgLogo,
+            txtEmail: txtEmail,
+            horizontalSpace: horizontalSpace,
+            txtPass: txtPass,
+            buttonlogging: buttonlogging,
+            googlebtn: googlebtn,
+            btnGithub: btnGithub,
+            txtRegister: txtRegister,
+            isLoading: isLoading),
       ),
     );
   }
@@ -140,6 +150,75 @@ class DesktopLoginScreen extends StatelessWidget {
               width: 450,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  txtEmail,
+                  horizontalSpace,
+                  txtPass,
+                  horizontalSpace,
+                  buttonlogging,
+                  horizontalSpace,
+                  googlebtn,
+                  horizontalSpace,
+                  btnGithub,
+                  txtRegister
+                ],
+              ),
+            ),
+            const Padding(padding: EdgeInsets.only(right: 100))
+          ],
+        ),
+        isLoading ? const LoadingModalWidget() : Container()
+      ],
+    );
+  }
+}
+
+class TabletLoginScreen extends StatelessWidget {
+  const TabletLoginScreen({
+    Key? key,
+    required this.imgLogo,
+    required this.txtEmail,
+    required this.horizontalSpace,
+    required this.txtPass,
+    required this.buttonlogging,
+    required this.googlebtn,
+    required this.btnGithub,
+    required this.txtRegister,
+    required this.isLoading,
+  }) : super(key: key);
+
+  final Image imgLogo;
+  final TextFormField txtEmail;
+  final SizedBox horizontalSpace;
+  final TextFormField txtPass;
+  final SocialLoginButton buttonlogging;
+  final SocialLoginButton googlebtn;
+  final SocialLoginButton btnGithub;
+  final Padding txtRegister;
+  final bool isLoading;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Container(
+          decoration: const BoxDecoration(
+              image: DecorationImage(
+                  opacity: 0.5,
+                  fit: BoxFit.cover,
+                  image: AssetImage('assets/itc_esc.jpg'))),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Expanded(
+              child: imgLogo,
+            ),
+            SizedBox(
+              width: 400,
+              height: 300,
+              child: ListView(
+                //mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   txtEmail,
                   horizontalSpace,
@@ -218,7 +297,7 @@ class MobileLoginScreen extends StatelessWidget {
                   ],
                 ),
                 SizedBox(
-                  height: 250,
+                  height: 350,
                   child: Positioned(
                     top: 100,
                     child: imgLogo,
