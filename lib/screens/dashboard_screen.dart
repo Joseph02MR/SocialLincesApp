@@ -18,7 +18,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget build(BuildContext context) {
     ThemeProvider theme = Provider.of<ThemeProvider>(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Lincesaurios anonimos'), actions: []),
+      appBar: AppBar(title: const Text('Lincesaurios anonimos'), actions: [
+        IconButton(
+          icon: const Icon(
+            Icons.settings,
+          ),
+          onPressed: () {
+            Navigator.pushNamed(context, '/theme');
+          },
+        )
+      ]),
       drawer: Drawer(
         child: ListView(
           children: [

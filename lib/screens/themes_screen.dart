@@ -108,6 +108,18 @@ class _ThemesScreenState extends State<ThemesScreen> {
                 dark_theme,
                 const Spacer(flex: 1),
                 custom_theme,
+                const Spacer(flex: 3),
+                SizedBox(
+                  child: IconButton(
+                    iconSize: 40,
+                    icon: const Icon(
+                      Icons.arrow_back,
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                )
               ],
             ),
           ),

@@ -221,6 +221,18 @@ class DesktopLoginScreen extends StatelessWidget {
                   fit: BoxFit.cover,
                   image: AssetImage('assets/images/itc_esc.jpg'))),
         ),
+        Positioned(
+            bottom: 30,
+            right: 30,
+            child: IconButton(
+              iconSize: 50,
+              icon: const Icon(
+                Icons.settings,
+              ),
+              onPressed: () {
+                Navigator.pushNamed(context, '/theme');
+              },
+            )),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -245,7 +257,7 @@ class DesktopLoginScreen extends StatelessWidget {
                 ],
               ),
             ),
-            const Padding(padding: EdgeInsets.only(right: 100))
+            const Padding(padding: EdgeInsets.only(right: 100)),
           ],
         ),
         isLoading ? const LoadingModalWidget() : Container()
@@ -300,6 +312,18 @@ class TabletLoginScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: content),
         ),
+        Positioned(
+            top: 20,
+            left: 10,
+            child: IconButton(
+              iconSize: 40,
+              icon: const Icon(
+                Icons.settings,
+              ),
+              onPressed: () {
+                Navigator.pushNamed(context, '/theme');
+              },
+            )),
         isLoading ? const LoadingModalWidget() : Container()
       ],
     );
@@ -365,7 +389,7 @@ class MobileLoginScreen extends StatelessWidget {
                   child: imgLogo,
                 ),
                 Positioned(
-                    bottom: 50,
+                    top: 20,
                     left: 10,
                     child: IconButton(
                       icon: const Icon(Icons.settings),
