@@ -7,7 +7,7 @@ class LoadingModalWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: const Color.fromARGB(1, 100, 100, 100),
-      child: Center(child: Image.asset('assets/loading__.gif')),
+      child: Center(child: Image.asset('assets/images/loading__.gif')),
     );
   }
 }

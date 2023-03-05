@@ -1,6 +1,12 @@
+import 'dart:html';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/provider/theme_provider.dart';
 import 'package:flutter_application_1/screens/responsive.dart';
+import 'package:flutter_application_1/settings/styles_settings.dart';
 import 'package:flutter_application_1/widgets/loading_modal_widget.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:social_login_buttons/social_login_buttons.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -11,6 +17,43 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  int _theme = 0;
+
+  void getTheme() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _theme = (prefs.getInt('theme') ?? 0);
+      prefs.setInt('theme', _theme);
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getTheme();
+  }
+
+  void setTheme(ThemeProvider theme) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    switch (prefs.getInt('theme')) {
+      case 0:
+        setState(() {
+          theme.setThemeData(StylesSettings.lightTheme(context));
+        });
+        break;
+      case 1:
+        setState(() {
+          theme.setThemeData(StylesSettings.darkTheme(context));
+        });
+        break;
+      case 2:
+        setState(() {
+          theme.setThemeData(StylesSettings.customTheme(context));
+        });
+        break;
+    }
+  }
+
   final txtEmail = TextFormField(
     decoration: const InputDecoration(
         label: Text("EMAIL USER"), border: OutlineInputBorder()),
@@ -29,6 +72,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ThemeProvider theme = Provider.of<ThemeProvider>(context);
+    setTheme(theme);
     final txtRegister = Padding(
       padding: const EdgeInsets.only(top: 16, bottom: 8),
       child: TextButton(
@@ -49,7 +94,7 @@ class _LoginScreenState extends State<LoginScreen> {
         Future.delayed(const Duration(milliseconds: 4000)).then((value) {
           isLoading = false;
           setState(() {});
-          Navigator.pushNamed(context, '/dash');
+          Navigator.pushNamed(context, '/onboard');
         });
       },
     );
@@ -63,9 +108,43 @@ class _LoginScreenState extends State<LoginScreen> {
     );
 
     final imgLogo = Image.asset(
-      'assets/logo_itc.png',
+      'assets/images/logo_itc.png',
+    );
+    final imglogoM = Image.asset(
+      'assets/images/logo_itc.png',
+      height: 250,
+    );
+    final imglogoT = Image.asset(
+      'assets/images/logo_itc.png',
+      height: 350,
     );
 
+    final tab_Widgets = [
+      Padding(padding: EdgeInsets.only(right: 20)),
+      Expanded(
+        child: imgLogo,
+      ),
+      SizedBox(
+        width: 400,
+        height: 300,
+        child: ListView(
+          //mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            txtEmail,
+            horizontalSpace,
+            txtPass,
+            horizontalSpace,
+            buttonlogging,
+            horizontalSpace,
+            googlebtn,
+            horizontalSpace,
+            btnGithub,
+            txtRegister
+          ],
+        ),
+      ),
+      const Padding(padding: EdgeInsets.only(right: 100))
+    ];
     return Scaffold(
       resizeToAvoidBottomInset: true,
       body: Responsive(
@@ -77,7 +156,7 @@ class _LoginScreenState extends State<LoginScreen> {
             googlebtn: googlebtn,
             btnGithub: btnGithub,
             txtRegister: txtRegister,
-            imgLogo: imgLogo,
+            imgLogo: imglogoM,
             isLoading: isLoading),
         desktop: DesktopLoginScreen(
           imgLogo: imgLogo,
@@ -91,15 +170,17 @@ class _LoginScreenState extends State<LoginScreen> {
           isLoading: isLoading,
         ),
         tablet: TabletLoginScreen(
-            imgLogo: imgLogo,
-            txtEmail: txtEmail,
-            horizontalSpace: horizontalSpace,
-            txtPass: txtPass,
-            buttonlogging: buttonlogging,
-            googlebtn: googlebtn,
-            btnGithub: btnGithub,
-            txtRegister: txtRegister,
-            isLoading: isLoading),
+          imgLogo: imglogoT,
+          txtEmail: txtEmail,
+          horizontalSpace: horizontalSpace,
+          txtPass: txtPass,
+          buttonlogging: buttonlogging,
+          googlebtn: googlebtn,
+          btnGithub: btnGithub,
+          txtRegister: txtRegister,
+          isLoading: isLoading,
+          content: tab_Widgets,
+        ),
       ),
     );
   }
@@ -138,7 +219,7 @@ class DesktopLoginScreen extends StatelessWidget {
               image: DecorationImage(
                   opacity: 0.5,
                   fit: BoxFit.cover,
-                  image: AssetImage('assets/itc_esc.jpg'))),
+                  image: AssetImage('assets/images/itc_esc.jpg'))),
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -174,18 +255,19 @@ class DesktopLoginScreen extends StatelessWidget {
 }
 
 class TabletLoginScreen extends StatelessWidget {
-  const TabletLoginScreen({
-    Key? key,
-    required this.imgLogo,
-    required this.txtEmail,
-    required this.horizontalSpace,
-    required this.txtPass,
-    required this.buttonlogging,
-    required this.googlebtn,
-    required this.btnGithub,
-    required this.txtRegister,
-    required this.isLoading,
-  }) : super(key: key);
+  const TabletLoginScreen(
+      {Key? key,
+      required this.imgLogo,
+      required this.txtEmail,
+      required this.horizontalSpace,
+      required this.txtPass,
+      required this.buttonlogging,
+      required this.googlebtn,
+      required this.btnGithub,
+      required this.txtRegister,
+      required this.isLoading,
+      required this.content})
+      : super(key: key);
 
   final Image imgLogo;
   final TextFormField txtEmail;
@@ -196,6 +278,7 @@ class TabletLoginScreen extends StatelessWidget {
   final SocialLoginButton btnGithub;
   final Padding txtRegister;
   final bool isLoading;
+  final List<Widget> content;
 
   @override
   Widget build(BuildContext context) {
@@ -206,35 +289,16 @@ class TabletLoginScreen extends StatelessWidget {
               image: DecorationImage(
                   opacity: 0.5,
                   fit: BoxFit.cover,
-                  image: AssetImage('assets/itc_esc.jpg'))),
+                  image: AssetImage('assets/images/itc_esc.jpg'))),
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Expanded(
-              child: imgLogo,
-            ),
-            SizedBox(
-              width: 400,
-              height: 300,
-              child: ListView(
-                //mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  txtEmail,
-                  horizontalSpace,
-                  txtPass,
-                  horizontalSpace,
-                  buttonlogging,
-                  horizontalSpace,
-                  googlebtn,
-                  horizontalSpace,
-                  btnGithub,
-                  txtRegister
-                ],
-              ),
-            ),
-            const Padding(padding: EdgeInsets.only(right: 100))
-          ],
+        Center(
+          child: MediaQuery.of(context).size.width > 750
+              ? Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: content)
+              : Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: content),
         ),
         isLoading ? const LoadingModalWidget() : Container()
       ],
@@ -275,7 +339,7 @@ class MobileLoginScreen extends StatelessWidget {
               image: DecorationImage(
                   opacity: 0.5,
                   fit: BoxFit.cover,
-                  image: AssetImage('assets/itc_esc.jpg'))),
+                  image: AssetImage('assets/images/itc_esc.jpg'))),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: Stack(
@@ -296,13 +360,19 @@ class MobileLoginScreen extends StatelessWidget {
                     txtRegister
                   ],
                 ),
-                SizedBox(
-                  height: 350,
-                  child: Positioned(
-                    top: 100,
-                    child: imgLogo,
-                  ),
-                )
+                Positioned(
+                  top: 50,
+                  child: imgLogo,
+                ),
+                Positioned(
+                    bottom: 50,
+                    left: 10,
+                    child: IconButton(
+                      icon: const Icon(Icons.settings),
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/theme');
+                      },
+                    ))
               ],
             ),
           ),

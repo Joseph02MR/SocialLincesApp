@@ -24,9 +24,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           children: [
             const UserAccountsDrawerHeader(
                 currentAccountPicture: CircleAvatar(
-                  backgroundImage: NetworkImage(
-                      'https://cdn0.soyungato.com/es/razas/2/1/0/gato-snowshoe_12_0_orig.jpg'),
-                ),
+                    backgroundImage: AssetImage('assets/images/itc_esc.jpg')),
                 accountName: Text('Sunny'),
                 accountEmail: Text('sunny@omori.com')),
             ListTile(
@@ -38,7 +36,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               leading: Icon(Icons.settings),
               trailing: Icon(Icons.chevron_right),
             ),
-            DayNightSwitcher(
+            /*DayNightSwitcher(
                 isDarkModeEnabled: isDarkModeEnabled,
                 onStateChanged: (isDarkModeEnabled) {
                   isDarkModeEnabled
@@ -46,7 +44,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       : theme.setThemeData(StylesSettings.lightTheme(context));
                   this.isDarkModeEnabled = isDarkModeEnabled;
                   setState(() {});
-                })
+                })*/
           ],
         ),
       ),

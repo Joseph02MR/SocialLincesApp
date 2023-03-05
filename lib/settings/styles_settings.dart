@@ -14,6 +14,14 @@ class StylesSettings {
         colorScheme:
             Theme.of(context).colorScheme.copyWith(primary: Colors.blueGrey));
   }
+
+  static ThemeData customTheme(BuildContext context) {
+    final theme = ThemeData.dark();
+    return theme.copyWith(
+        colorScheme: Theme.of(context)
+            .colorScheme
+            .copyWith(primary: const Color.fromARGB(255, 31, 123, 169)));
+  }
 }
 
 const Color yellow = Color(0xffFDC054);
