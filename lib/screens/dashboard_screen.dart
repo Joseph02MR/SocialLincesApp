@@ -1,6 +1,7 @@
 import 'package:day_night_switcher/day_night_switcher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/provider/theme_provider.dart';
+import 'package:flutter_application_1/screens/list_post.dart';
 import 'package:flutter_application_1/settings/styles_settings.dart';
 import 'package:provider/provider.dart';
 
@@ -18,6 +19,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget build(BuildContext context) {
     ThemeProvider theme = Provider.of<ThemeProvider>(context);
     return Scaffold(
+      body: PostList(),
+      floatingActionButton: FloatingActionButton.extended(
+          onPressed: () {
+            Navigator.pushNamed(context, '/add').then((value) {
+              setState(() {});
+            });
+          },
+          label: const Text('Agregar publicación'),
+          icon: const Icon(Icons.add_comment)),
       appBar: AppBar(title: const Text('Lincesaurios anonimos'), actions: [
         IconButton(
           icon: const Icon(

@@ -49,10 +49,6 @@ class OnboardingScreen extends StatelessWidget {
           return OnboardingCard(data: data[index]);
         },
         onFinish: () {
-          /*Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => DashboardScreen()),
-          );*/
           Navigator.pushNamed(context, '/dash');
         },
       ),

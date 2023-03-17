@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/screens/add_post_screen.dart';
 import 'package:flutter_application_1/screens/dashboard_screen.dart';
 import 'package:flutter_application_1/screens/onboarding_screen.dart';
 import 'package:flutter_application_1/screens/register_screen.dart';
@@ -9,6 +10,7 @@ Map<String, WidgetBuilder> getApplicationRoutes() {
     '/register': (BuildContext context) => const RegisterScreen(),
     '/dash': (BuildContext context) => DashboardScreen(),
     '/onboard': (BuildContext context) => OnboardingScreen(),
-    '/theme': (BuildContext context) => ThemesScreen(),
+    '/theme': (BuildContext context) => const ThemesScreen(),
+    '/add': (BuildContext context) => AddPostScreen(),
   };
 }

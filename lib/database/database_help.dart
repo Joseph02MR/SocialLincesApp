@@ -6,20 +6,20 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
 class DatabaseHelper {
-  static final database_name = 'SocialLinces';
   static final versionDB = 1;
-  static final nameDB = "";
+  static final nameDB = "SocialLinces";
 
   static Database? _database;
   Future<Database> get database async {
     if (_database != null) return _database!;
-    return _database = _initDatabase();
+    return _database = await _initDatabase();
   }
 
   _initDatabase() async {
     Directory folder = await getApplicationDocumentsDirectory();
     String pathDB = join(folder.path, nameDB);
-    await openDatabase(pathDB, version: versionDB, onCreate: _createTables);
+    return await openDatabase(pathDB,
+        version: versionDB, onCreate: _createTables);
   }
 
   _createTables(Database db, int version) async {
