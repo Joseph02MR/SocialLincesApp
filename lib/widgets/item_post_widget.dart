@@ -12,9 +12,8 @@ class ItemPostWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final avatar = CircleAvatar(
-      backgroundImage: AssetImage('assets/images/cat.png'),
-    );
+    final avatar =
+        CircleAvatar(backgroundImage: AssetImage('assets/images/cat.png'));
 
     final txtUser = Text('Le José');
     final txtDate = Text('06/03/2023');
@@ -26,7 +25,7 @@ class ItemPostWidget extends StatelessWidget {
     FlagsProvider flag = Provider.of<FlagsProvider>(context);
 
     return Container(
-      margin: EdgeInsets.all(250),
+      margin: EdgeInsets.all(10),
       height: 250,
       width: double.infinity,
       decoration: BoxDecoration(
@@ -43,7 +42,11 @@ class ItemPostWidget extends StatelessWidget {
             children: [
               iconRate,
               Expanded(child: Container()),
-              IconButton(onPressed: () {}, icon: const Icon(Icons.edit)),
+              IconButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/add', arguments: postObj);
+                  },
+                  icon: const Icon(Icons.edit)),
               IconButton(
                   onPressed: () {
                     showDialog(
@@ -55,7 +58,7 @@ class ItemPostWidget extends StatelessWidget {
                                 TextButton(
                                     onPressed: () {
                                       database
-                                          .DELETE('tblName', postObj!.idPost!)
+                                          .DELETE('tblPost', postObj!.idPost!)
                                           .then(
                                             (value) => flag.setFlag_postList(),
                                           );

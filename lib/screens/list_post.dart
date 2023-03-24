@@ -17,7 +17,6 @@ class PostListState extends State<PostList> {
   DatabaseHelper? database;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     database = DatabaseHelper();
   }
@@ -25,7 +24,7 @@ class PostListState extends State<PostList> {
   @override
   Widget build(BuildContext context) {
     FlagsProvider flag = Provider.of<FlagsProvider>(context);
-    flag.getFlag_postList();
+    //flag.getFlag_postList();
 
     return FutureBuilder(
         future: flag.getFlag_postList() == true

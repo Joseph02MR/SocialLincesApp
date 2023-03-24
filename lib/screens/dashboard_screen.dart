@@ -47,12 +47,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 accountName: Text('Sunny'),
                 accountEmail: Text('sunny@omori.com')),
             ListTile(
-              onTap: () {
-                return;
-              },
+              onTap: () {},
               title: Text('Práctica 1'),
               subtitle: Text('Descripción de la práctica'),
               leading: Icon(Icons.settings),
+              trailing: Icon(Icons.chevron_right),
+            ),
+            ListTile(
+              onTap: () {
+                Navigator.pushNamed(context, '/popular');
+              },
+              title: Text('API videos'),
+              leading: Icon(Icons.movie),
               trailing: Icon(Icons.chevron_right),
             ),
             /*DayNightSwitcher(
