@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/screens/add_post_screen.dart';
+import 'package:flutter_application_1/screens/calendar_screen.dart';
 import 'package:flutter_application_1/screens/dashboard_screen.dart';
 import 'package:flutter_application_1/screens/list_popular_videos.dart';
 import 'package:flutter_application_1/screens/onboarding_screen.dart';
@@ -14,5 +15,6 @@ Map<String, WidgetBuilder> getApplicationRoutes() {
     '/theme': (BuildContext context) => const ThemesScreen(),
     '/add': (BuildContext context) => AddPostScreen(),
     '/popular': (BuildContext context) => const ListPopularVideos(),
+    '/events': (BuildContext context) => const CalendarScreen(),
   };
 }

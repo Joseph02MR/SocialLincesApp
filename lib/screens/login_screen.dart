@@ -89,7 +89,7 @@ class _LoginScreenState extends State<LoginScreen> {
       onPressed: () {
         isLoading = true;
         setState(() {});
-        Future.delayed(const Duration(milliseconds: 4000)).then((value) {
+        Future.delayed(const Duration(milliseconds: 1000)).then((value) {
           isLoading = false;
           setState(() {});
           Navigator.pushNamed(context, '/onboard');

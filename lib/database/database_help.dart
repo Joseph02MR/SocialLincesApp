@@ -1,13 +1,14 @@
 import 'dart:io';
 
+import 'package:flutter_application_1/models/event.dart';
 import 'package:flutter_application_1/models/post_model.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
 class DatabaseHelper {
-  static final versionDB = 1;
-  static final nameDB = "SocialLinces";
+  static const versionDB = 4;
+  static const nameDB = "SocialLinces.db";
 
   static Database? _database;
   Future<Database> get database async {
@@ -23,11 +24,25 @@ class DatabaseHelper {
   }
 
   _createTables(Database db, int version) async {
-    String query = '''CREATE TABLE tblPost (
+    String query = '''
+    CREATE TABLE tblPost (
       idPost INTEGER PRIMARY KEY,
       dscPost VARCHAR(200),
       datePost DATE
-    );''';
+    );
+      
+    ''';
+    db.execute(query);
+    query = '''
+    CREATE TABLE tblEvent (
+      idEvent INTEGER PRIMARY KEY,
+      title VARCHAR(50),
+      dscEvent VARCHAR(200),
+      initDate DATE,
+      endDate DATE,
+      status INTEGER
+    );
+    ''';
     db.execute(query);
   }
 
@@ -36,6 +51,7 @@ class DatabaseHelper {
     return conexion.insert(tblName, data);
   }
 
+  /*POSTS */
   Future<int> UPDATE(String tblName, Map<String, dynamic> data) async {
     var conexion = await database;
     return conexion.update(tblName, data,
@@ -51,5 +67,23 @@ class DatabaseHelper {
     var conexion = await database;
     var result = await conexion.query('tblPost');
     return result.map((post) => Post.fromMap(post)).toList();
+  }
+
+  /*EVENTOS */
+  Future<List<Event>> GETALLEVENTS() async {
+    var conexion = await database;
+    var result = await conexion.query('tblEvent');
+    return result.map((event) => Event.fromMap(event)).toList();
+  }
+
+  Future<int> UPD_EVENT(String tblName, Map<String, dynamic> data) async {
+    var conexion = await database;
+    return conexion.update(tblName, data,
+        where: 'idEvent = ?', whereArgs: [data['idEvent']]);
+  }
+
+  Future<int> DEL_EVENT(String tblName, int idEvent) async {
+    var conexion = await database;
+    return conexion.delete(tblName, where: 'idEvent = ?', whereArgs: [idEvent]);
   }
 }

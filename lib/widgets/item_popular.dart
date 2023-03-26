@@ -10,7 +10,7 @@ class ItemPopular extends StatelessWidget {
   Widget build(BuildContext context) {
     return FadeInImage(
       fit: BoxFit.fill,
-      placeholder: const AssetImage('assets/loading.gif'),
+      placeholder: const AssetImage('assets/images/loading__.gif'),
       image:
           NetworkImage('https://image.tmdb.org/t/p/w500/${model.posterPath}'),
     );

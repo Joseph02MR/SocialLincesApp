@@ -55,6 +55,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
             ListTile(
               onTap: () {
+                Navigator.pushNamed(context, '/events');
+              },
+              title: Text('Eventos'),
+              leading: Icon(Icons.calendar_month),
+              trailing: Icon(Icons.chevron_right),
+            ),
+            ListTile(
+              onTap: () {
                 Navigator.pushNamed(context, '/popular');
               },
               title: Text('API videos'),
