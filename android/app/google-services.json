@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "772586548580",
+    "project_id": "sociallinces",
+    "storage_bucket": "sociallinces.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:772586548580:android:2519ee07787d082fd95e71",
+        "android_client_info": {
+          "package_name": "com.example.flutter_application_1"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "772586548580-ll2j0hr6eb7l7q23gmblmrbtugdt2ua0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCIFNamnDDvK8d9qap9-e5MrxXZXlMVTcM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "772586548580-ll2j0hr6eb7l7q23gmblmrbtugdt2ua0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

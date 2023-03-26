@@ -47,6 +47,8 @@ dependencies:
   concentric_transition: ^1.0.3
   shared_preferences: ^2.0.18
   http: ^0.13.5
+  firebase_auth: ^4.3.0
+  firebase_core: ^2.8.0
 
 dev_dependencies:
   flutter_test:
