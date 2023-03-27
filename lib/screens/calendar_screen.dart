@@ -1,5 +1,3 @@
-// ignore_for_file: non_constant_identifier_names
-
 import 'package:calendar_view/calendar_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/database/database_help.dart';
@@ -33,12 +31,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
         builder: (BuildContext context) {
           return Dialog(
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15.0)),
+                  borderRadius: BorderRadius.circular(10.0)),
               child: const FractionallySizedBox(
-                widthFactor: 0.95,
-                heightFactor: 0.6,
-                child:
-                    Padding(padding: EdgeInsets.all(12.0), child: EventForm()),
+                widthFactor: 1,
+                heightFactor: 0.7,
+                child: EventForm(),
               ));
         });
   }

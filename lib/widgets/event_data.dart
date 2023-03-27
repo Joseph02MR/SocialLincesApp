@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/database/database_help.dart';
 import 'package:flutter_application_1/models/event.dart';
 import 'package:flutter_application_1/provider/flags_provider.dart';
-import 'package:flutter_application_1/widgets/event_form.dart';
 import 'package:provider/provider.dart';
 
 class EventData extends StatefulWidget {
@@ -28,94 +27,103 @@ class _EventDataState extends State<EventData> {
   @override
   Widget build(BuildContext context) {
     FlagsProvider flag = Provider.of<FlagsProvider>(context);
-    return Column(
-      children: [
-        Row(
-          children: [const Text('Titulo: '), Text(event.title)],
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(
+          width: 10,
+          color: event.color,
         ),
-        Row(
-          children: [
-            const Text('Fecha inicio: '),
-            Text(event.initDate.toString())
-          ],
-        ),
-        Row(
-          children: [const Text('Fecha fin: '), Text(event.endDate.toString())],
-        ),
-        const Text('Descripción: '),
-        Text(event.dscEvent ?? "Sin descripción"),
-        Row(
-          children: [
-            const Text('Completado: '),
-            Checkbox(
-              value: event.status == 1,
-              onChanged: (value) {
-                event.status = value! ? 1 : 0;
-              },
-            )
-          ],
-        ),
-        Row(
-          children: [
-            const Text('Completado: '),
-            Checkbox(
-              value: event.status == 1,
-              onChanged: (value) {
-                event.status = value! ? 1 : 0;
-              },
-            )
-          ],
-        ),
-        Row(
-          children: [
-            IconButton(
+        borderRadius: BorderRadius.all(Radius.circular(10)),
+      ),
+      padding: EdgeInsets.all(8),
+      margin: EdgeInsets.all(5),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              const Text('Titulo: ',
+                  style: TextStyle(fontWeight: FontWeight.bold)),
+              Text(event.title)
+            ],
+          ),
+          Row(
+            children: [
+              const Text('Fecha inicio: ',
+                  style: TextStyle(fontWeight: FontWeight.bold)),
+              Text(event.initDate.toString())
+            ],
+          ),
+          Row(
+            children: [
+              const Text('Fecha fin: ',
+                  style: TextStyle(fontWeight: FontWeight.bold)),
+              Text(event.endDate.toString())
+            ],
+          ),
+          Row(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text('Descripción: ',
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  Text(event.dscEvent ?? "Sin descripción"),
+                ],
+              )
+            ],
+          ),
+          Row(
+            children: [
+              const Text('Completado: ',
+                  style: TextStyle(fontWeight: FontWeight.bold)),
+              Text(
+                event.status == 1 ? "Completado" : "Pendiente",
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: event.status == 1
+                        ? Colors.blueAccent
+                        : Colors.redAccent),
+              ),
+              IconButton(
+                  onPressed: () {
+                    Navigator.of(context, rootNavigator: true)
+                        .pushNamed('/edit_event', arguments: event);
+                  },
+                  icon: const Icon(Icons.edit)),
+              IconButton(
+                icon: const Icon(
+                  Icons.delete,
+                ),
                 onPressed: () {
                   showDialog(
                       context: context,
-                      builder: (BuildContext context) {
-                        return Dialog(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15.0)),
-                            child: const FractionallySizedBox(
-                                widthFactor: 0.95,
-                                heightFactor: 0.6,
-                                child: EventForm()));
-                      });
+                      builder: (context) => AlertDialog(
+                            title: const Text('confirmar borrado'),
+                            content: const Text('¿Deseas borrar este evento?'),
+                            actions: [
+                              TextButton(
+                                  onPressed: () {
+                                    database
+                                        ?.DEL_EVENT('tblEvent', event.idEvent!)
+                                        .then(
+                                          (value) => flag.setFlag_postList(),
+                                        );
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text('Sí')),
+                              TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text('No'))
+                            ],
+                          ));
                 },
-                icon: const Icon(Icons.edit)),
-            IconButton(
-              icon: const Icon(
-                Icons.delete,
-              ),
-              onPressed: () {
-                showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                          title: const Text('confirmar borrado'),
-                          content: const Text('¿Deseas borrar el post?'),
-                          actions: [
-                            TextButton(
-                                onPressed: () {
-                                  database
-                                      ?.DEL_EVENT('tblEvent', event.idEvent!)
-                                      .then(
-                                        (value) => flag.setFlag_postList(),
-                                      );
-                                  Navigator.pop(context);
-                                },
-                                child: const Text('Sí')),
-                            TextButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                child: const Text('No'))
-                          ],
-                        ));
-              },
-            )
-          ],
-        )
-      ],
+              )
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

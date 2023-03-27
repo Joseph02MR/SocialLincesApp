@@ -1,3 +1,4 @@
+import 'package:calendar_view/calendar_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/models/event.dart';
 import 'package:flutter_application_1/provider/flags_provider.dart';
@@ -8,18 +9,14 @@ import 'package:provider/provider.dart';
 DateTime get _now => DateTime.now();
 
 class EventForm extends StatefulWidget {
-  Event? event;
-
-  EventForm({Key? key}) : super(key: key);
-
-  EventForm.withData(Event this.event, {super.key});
+  const EventForm({Key? key}) : super(key: key);
 
   @override
   State<EventForm> createState() => _EventFormState();
 }
 
 class _EventFormState extends State<EventForm> {
-  DatabaseHelper? database = DatabaseHelper();
+  DatabaseHelper? database;
 
   DateTime selectedDate = DateTime(
     _now.year,
@@ -46,6 +43,13 @@ class _EventFormState extends State<EventForm> {
   bool simpleDate = true;
 
   late Event created;
+  Event? selected;
+
+  @override
+  void initState() {
+    super.initState();
+    database = DatabaseHelper();
+  }
 
   Future<void> _selectInitDate(
     BuildContext context,
@@ -60,11 +64,12 @@ class _EventFormState extends State<EventForm> {
             picked.month >= _now.month ||
             picked.year >= _now.year)) {
       setState(() {
-        if (simpleDate) {
+        if (simpleDate && (!selectedDate.compareWithoutTime(picked))) {
+          selectedDate =
+              DateTime(picked.year, picked.month, picked.day, 00, 00);
+        } else {
           selectedDate = DateTime(
               picked.year, picked.month, picked.day, _now.hour, _now.minute);
-        } else {
-          selectedDate = DateTime(picked.year, picked.month, picked.day);
         }
         date.text = "${selectedDate.toLocal()}".split(' ')[0];
       });
@@ -139,208 +144,267 @@ class _EventFormState extends State<EventForm> {
 
   @override
   Widget build(BuildContext context) {
+    if (ModalRoute.of(context)!.settings.arguments != null) {
+      selected = ModalRoute.of(context)!.settings.arguments as Event;
+      selectedDate = selected!.initDate;
+      selectedEndDate = selected!.endDate;
+
+      date.text = "${selectedDate.toLocal()}".split(' ')[0];
+      date2.text = "${selectedEndDate.toLocal()}".split(' ')[0];
+      time.text = TimeOfDay.fromDateTime(selectedDate).format(context);
+      time2.text = TimeOfDay.fromDateTime(selectedEndDate).format(context);
+      desc.text = selected!.dscEvent!;
+      title.text = selected!.title;
+    }
     FlagsProvider flag = Provider.of<FlagsProvider>(context);
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return Dialog(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15.0)),
-              child: const FractionallySizedBox(
-                widthFactor: 0.95,
-                heightFactor: 0.6,
-                child:
-                    Padding(padding: EdgeInsets.all(12.0), child: EventForm()),
-              ));
-        });
-    return ListView(
-      children: <Widget>[
-        const Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'Nuevo evento',
-              style: TextStyle(
-                color: darkGrey,
-                fontSize: 20,
-              ),
+
+    return Scaffold(
+      body: Container(
+        decoration: const BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+        ),
+        padding: const EdgeInsets.all(8.0),
+        child: ListView(
+          children: <Widget>[
+            const Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Nuevo evento',
+                  style: TextStyle(
+                    color: darkGrey,
+                    fontSize: 20,
+                  ),
+                ),
+                CloseButton()
+              ],
             ),
-            CloseButton()
-          ],
-        ),
-        TextField(
-          controller: title,
-          readOnly: false,
-          decoration:
-              const InputDecoration(constraints: BoxConstraints(maxWidth: 180)),
-        ),
-        const SizedBox(
-          height: 20.0,
-        ),
-        const Text(
-          "Fecha del evento",
-          style: TextStyle(
-            color: darkGrey,
-            fontSize: 15,
-          ),
-        ),
-        const SizedBox(
-          height: 10.0,
-        ),
-        Row(
-          children: [
+            TextField(
+              controller: title,
+              readOnly: false,
+              decoration: const InputDecoration(
+                  constraints: BoxConstraints(maxWidth: 180)),
+            ),
+            const SizedBox(
+              height: 20.0,
+            ),
             const Text(
-              "Todo el día: ",
+              "Fecha del evento",
               style: TextStyle(
                 color: darkGrey,
                 fontSize: 15,
               ),
             ),
-            Switch(
-                value: simpleDate,
-                activeColor: Colors.green,
-                onChanged: (bool value) {
-                  setState(() {
-                    simpleDate = value;
-                  });
-                })
-          ],
-        ),
-        Row(
-          children: [
+            const SizedBox(
+              height: 10.0,
+            ),
+            Row(
+              children: [
+                const Text(
+                  "Todo el día: ",
+                  style: TextStyle(
+                    color: darkGrey,
+                    fontSize: 15,
+                  ),
+                ),
+                Switch(
+                    value: simpleDate,
+                    activeColor: Colors.green,
+                    onChanged: (bool value) {
+                      setState(() {
+                        simpleDate = value;
+                      });
+                    })
+              ],
+            ),
+            Row(
+              children: [
+                TextField(
+                  controller: date,
+                  readOnly: true,
+                  decoration: const InputDecoration(
+                      constraints: BoxConstraints(maxWidth: 150)),
+                  style: const TextStyle(
+                    fontSize: 15.0,
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(
+                    Icons.calendar_month,
+                  ),
+                  onPressed: () {
+                    _selectInitDate(context);
+                  },
+                ),
+              ],
+            ),
+            !simpleDate
+                ? Column(
+                    children: [
+                      Row(
+                        children: [
+                          TextField(
+                            controller: time,
+                            readOnly: true,
+                            decoration: const InputDecoration(
+                                constraints: BoxConstraints(maxWidth: 150)),
+                          ),
+                          IconButton(
+                            icon: const Icon(
+                              Icons.timer,
+                            ),
+                            onPressed: () {
+                              _selectHour(context);
+                            },
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          TextField(
+                            controller: date2,
+                            readOnly: true,
+                            decoration: const InputDecoration(
+                                constraints: BoxConstraints(maxWidth: 150)),
+                            style: const TextStyle(
+                              fontSize: 15.0,
+                            ),
+                          ),
+                          IconButton(
+                            icon: const Icon(
+                              Icons.calendar_month,
+                            ),
+                            onPressed: () {
+                              _selectEndDate(context);
+                            },
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          TextField(
+                            controller: time2,
+                            readOnly: true,
+                            decoration: const InputDecoration(
+                                constraints: BoxConstraints(maxWidth: 150)),
+                          ),
+                          IconButton(
+                            icon: const Icon(
+                              Icons.timer,
+                            ),
+                            onPressed: () {
+                              _selectEndHour(context);
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
+                  )
+                : const SizedBox(
+                    height: 1.0,
+                  ),
+            const SizedBox(
+              height: 20.0,
+            ),
+            const Text(
+              "Descripción del evento",
+              style: TextStyle(
+                color: darkGrey,
+                fontSize: 15,
+              ),
+            ),
+            const SizedBox(
+              height: 10.0,
+            ),
             TextField(
-              controller: date,
-              readOnly: true,
+              controller: desc,
+              readOnly: false,
               decoration: const InputDecoration(
-                  constraints: BoxConstraints(maxWidth: 150)),
-              style: const TextStyle(
-                fontSize: 15.0,
-              ),
+                  constraints: BoxConstraints(maxWidth: 180, minHeight: 60)),
             ),
-            IconButton(
-              icon: const Icon(
-                Icons.calendar_month,
-              ),
-              onPressed: () {
-                _selectInitDate(context);
+            const SizedBox(
+              height: 10.0,
+            ),
+            selected != null
+                ? Row(
+                    children: [
+                      const Text("Completado: ",
+                          style: TextStyle(
+                            color: darkGrey,
+                            fontSize: 15,
+                          )),
+                      Checkbox(
+                        value: selected?.status == 1,
+                        onChanged: (value) {
+                          setState(() {
+                            selected?.status = value! ? 1 : 0;
+                          });
+                        },
+                      )
+                    ],
+                  )
+                : const SizedBox(
+                    height: 1.0,
+                  ),
+            ElevatedButton(
+              onPressed: () => {
+                if (selected == null)
+                  {
+                    created = Event(
+                        title: title.text,
+                        initDate: selectedDate,
+                        endDate: simpleDate
+                            ? DateTime(selectedDate.year, selectedDate.month,
+                                selectedDate.day, 23, 59, 59)
+                            : selectedEndDate,
+                        status: 0),
+                    database?.INSERT('tblEvent', {
+                      'title': created.title,
+                      'dscEvent': created.dscEvent,
+                      'initDate': created.initDate.toIso8601String(),
+                      'endDate': created.endDate.toIso8601String(),
+                      'status': 0
+                    }).then((value) {
+                      var msg = value > 0 ? 'Evento guardado' : 'Error';
+                      var snackBar = SnackBar(content: Text(msg));
+                      flag.setFlag_eventList();
+                      Navigator.pop(context);
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    })
+                  }
+                else
+                  {
+                    selected!.title = title.text,
+                    selected!.dscEvent = desc.text,
+                    selected!.initDate = selectedDate,
+                    selected!.endDate = simpleDate
+                        ? DateTime(selectedDate.year, selectedDate.month,
+                            selectedDate.day, 23, 59, 59)
+                        : selectedEndDate,
+                    database?.UPD_EVENT('tblEvent', {
+                      'idEvent': selected!.idEvent,
+                      'title': selected!.title,
+                      'dscEvent': selected!.dscEvent,
+                      'initDate': selected!.initDate.toIso8601String(),
+                      'endDate': selected!.endDate.toIso8601String(),
+                      'status': selected!.status
+                    }).then((value) {
+                      var msg = value > 0 ? 'Evento actualizado' : 'Error';
+                      var snackBar = SnackBar(content: Text(msg));
+                      flag.setFlag_eventList();
+                      Navigator.pop(context);
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    })
+                  }
               },
+              child: const Text('Guardar'),
+            ),
+            const SizedBox(
+              height: 20.0,
             ),
           ],
         ),
-        !simpleDate
-            ? Column(
-                children: [
-                  Row(
-                    children: [
-                      TextField(
-                        controller: time,
-                        readOnly: true,
-                        decoration: const InputDecoration(
-                            constraints: BoxConstraints(maxWidth: 150)),
-                      ),
-                      IconButton(
-                        icon: const Icon(
-                          Icons.timer,
-                        ),
-                        onPressed: () {
-                          _selectHour(context);
-                        },
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      TextField(
-                        controller: date2,
-                        readOnly: true,
-                        decoration: const InputDecoration(
-                            constraints: BoxConstraints(maxWidth: 150)),
-                        style: const TextStyle(
-                          fontSize: 15.0,
-                        ),
-                      ),
-                      IconButton(
-                        icon: const Icon(
-                          Icons.calendar_month,
-                        ),
-                        onPressed: () {
-                          _selectEndDate(context);
-                        },
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      TextField(
-                        controller: time2,
-                        readOnly: true,
-                        decoration: const InputDecoration(
-                            constraints: BoxConstraints(maxWidth: 150)),
-                      ),
-                      IconButton(
-                        icon: const Icon(
-                          Icons.timer,
-                        ),
-                        onPressed: () {
-                          _selectEndHour(context);
-                        },
-                      ),
-                    ],
-                  ),
-                ],
-              )
-            : const SizedBox(
-                height: 1.0,
-              ),
-        const SizedBox(
-          height: 20.0,
-        ),
-        const Text(
-          "Descripción del evento",
-          style: TextStyle(
-            color: darkGrey,
-            fontSize: 15,
-          ),
-        ),
-        const SizedBox(
-          height: 10.0,
-        ),
-        TextField(
-          controller: desc,
-          readOnly: false,
-          decoration: const InputDecoration(
-              constraints: BoxConstraints(maxWidth: 180, minHeight: 60)),
-        ),
-        ElevatedButton(
-          onPressed: () => {
-            created = Event(
-                title: title.text,
-                initDate: selectedDate,
-                endDate: simpleDate
-                    ? DateTime(selectedDate.year, selectedDate.month,
-                        selectedDate.day, 23, 59, 59)
-                    : selectedEndDate,
-                status: 0),
-            database?.INSERT('tblEvent', {
-              'title': created.title,
-              'dscEvent': created.dscEvent,
-              'initDate': created.initDate.toIso8601String(),
-              'endDate': created.endDate.toIso8601String(),
-              'status': 0
-            }).then((value) {
-              var msg = value > 0 ? 'Evento guardado' : 'Error';
-              var snackBar = SnackBar(content: Text(msg));
-              flag.setFlag_eventList();
-              Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(snackBar);
-            })
-          },
-          child: const Text('Guardar'),
-        ),
-        const SizedBox(
-          height: 20.0,
-        ),
-      ],
+      ),
     );
   }
 }

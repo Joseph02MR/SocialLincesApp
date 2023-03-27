@@ -8,6 +8,7 @@ class Event {
   DateTime initDate;
   DateTime endDate;
   int status;
+  late Color color;
 
   Event(
       {this.idEvent,
@@ -15,7 +16,9 @@ class Event {
       required this.initDate,
       required this.endDate,
       this.dscEvent,
-      required this.status});
+      required this.status}) {
+    color = setEventColor(endDate, status);
+  }
   factory Event.fromMap(Map<String, dynamic> map) {
     return Event(
         idEvent: map['idEvent'],
@@ -35,12 +38,12 @@ class Event {
           endTime: event.endDate,
           date: event.initDate,
           description: event.dscEvent ?? "",
-          color: getEventColor(event.endDate, event.status)));
+          color: event.color));
     }
     return calendarEvents;
   }
 
-  static Color getEventColor(DateTime endTime, int status) {
+  Color setEventColor(DateTime endTime, int status) {
     if (endTime.difference(DateTime.now()).inDays < 0 && status == 0) {
       return Colors.red;
     }
