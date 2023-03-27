@@ -44,6 +44,7 @@ class _EventFormState extends State<EventForm> {
 
   late Event created;
   Event? selected;
+  late String aux;
 
   @override
   void initState() {
@@ -153,11 +154,11 @@ class _EventFormState extends State<EventForm> {
       date2.text = "${selectedEndDate.toLocal()}".split(' ')[0];
       time.text = TimeOfDay.fromDateTime(selectedDate).format(context);
       time2.text = TimeOfDay.fromDateTime(selectedEndDate).format(context);
-      desc.text = selected!.dscEvent!;
+      desc.text = selected!.dscEvent ?? "";
       title.text = selected!.title;
     }
     FlagsProvider flag = Provider.of<FlagsProvider>(context);
-
+    aux = selected != null ? 'Editar evento' : 'Nuevo evento';
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -166,17 +167,17 @@ class _EventFormState extends State<EventForm> {
         padding: const EdgeInsets.all(8.0),
         child: ListView(
           children: <Widget>[
-            const Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Nuevo evento',
-                  style: TextStyle(
+                  aux,
+                  style: const TextStyle(
                     color: darkGrey,
                     fontSize: 20,
                   ),
                 ),
-                CloseButton()
+                const CloseButton()
               ],
             ),
             TextField(
@@ -353,6 +354,7 @@ class _EventFormState extends State<EventForm> {
                     created = Event(
                         title: title.text,
                         initDate: selectedDate,
+                        dscEvent: desc.text,
                         endDate: simpleDate
                             ? DateTime(selectedDate.year, selectedDate.month,
                                 selectedDate.day, 23, 59, 59)

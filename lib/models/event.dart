@@ -44,7 +44,7 @@ class Event {
   }
 
   Color setEventColor(DateTime endTime, int status) {
-    if (endTime.difference(DateTime.now()).inDays < 0 && status == 0) {
+    if (endTime.difference(DateTime.now()).inSeconds < 0 && status == 0) {
       return Colors.red;
     }
     if (endTime.difference(DateTime.now()).inDays <= 0) {
