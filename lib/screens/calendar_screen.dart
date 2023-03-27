@@ -48,7 +48,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
     return Scaffold(
       body: FutureBuilder(
-        future: flag.getFlag_postList() == true
+        future: flag.getFlag_eventList() == true
             ? database!.GETALLEVENTS()
             : database!.GETALLEVENTS(),
         builder: (context, AsyncSnapshot<List<Event>> snapshot) {
