@@ -17,7 +17,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   TextEditingController email =
       TextEditingController(text: 'example@email.com');
 
-  EmailAuth? auth;
+  EmailAuth auth = EmailAuth();
 
   TextEditingController password = TextEditingController(text: '12345678');
   TextEditingController name = TextEditingController(text: 'Pedro Paramos');
@@ -73,15 +73,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20.0)),
               child: Container(
-                constraints: BoxConstraints(maxHeight: 150),
+                constraints: const BoxConstraints(maxHeight: 150),
                 child: Padding(
                   padding: const EdgeInsets.all(12.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
+                      const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: const [
+                        children: [
                           Text(
                             'Info',
                             style: TextStyle(
@@ -128,8 +128,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       Navigator.pop(context);
                       getImage(ImageSource.gallery);
                     },
-                    child: Row(
-                      children: const [
+                    child: const Row(
+                      children: [
                         Icon(Icons.image),
                         Text('From Gallery'),
                       ],
@@ -141,8 +141,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       Navigator.pop(context);
                       getImage(ImageSource.camera);
                     },
-                    child: Row(
-                      children: const [
+                    child: const Row(
+                      children: [
                         Icon(Icons.camera),
                         Text('From Camera'),
                       ],
@@ -298,7 +298,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
           Container(
             decoration: const BoxDecoration(
                 image: DecorationImage(
-                    image: AssetImage('assets/logo_itc.png'),
+                    image: AssetImage(
+                      'assets/images/logo_itc.png',
+                    ),
                     fit: BoxFit.cover)),
           ),
           Container(

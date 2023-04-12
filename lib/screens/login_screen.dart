@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/firebase/email_auth.dart';
 import 'package:flutter_application_1/provider/theme_provider.dart';
 import 'package:flutter_application_1/screens/responsive.dart';
 import 'package:flutter_application_1/settings/styles_settings.dart';
@@ -16,6 +17,8 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   int _theme = 0;
+
+  EmailAuth auth = EmailAuth();
 
   void getTheme() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -52,24 +55,29 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  final txtEmail = TextFormField(
-    decoration: const InputDecoration(
-        label: Text("EMAIL USER"), border: OutlineInputBorder()),
-  );
-
-  bool isLoading = false;
-
-  final txtPass = TextFormField(
-    decoration: const InputDecoration(
-        label: Text("Password"), border: OutlineInputBorder()),
-  );
-
-  final horizontalSpace = const SizedBox(
-    height: 10,
-  );
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    final txtEmail = TextFormField(
+      controller: emailController,
+      decoration: const InputDecoration(
+          label: Text("EMAIL USER"), border: OutlineInputBorder()),
+    );
+
+    bool isLoading = false;
+
+    final txtPass = TextFormField(
+      controller: passController,
+      decoration: const InputDecoration(
+          label: Text("Password"), border: OutlineInputBorder()),
+    );
+
+    final horizontalSpace = const SizedBox(
+      height: 10,
+    );
+
     ThemeProvider theme = Provider.of<ThemeProvider>(context);
     setTheme(theme);
     final txtRegister = Padding(
@@ -94,6 +102,22 @@ class _LoginScreenState extends State<LoginScreen> {
           setState(() {});
           Navigator.pushNamed(context, '/onboard');
         });
+
+        /*
+        auth
+            .signInWithEmailAndPassword(
+                email: emailController.text, password: passController.text)
+            .then((value) {
+          if (value) {
+            Navigator.pushNamed(context, '/onboard');
+          } else {
+            ScaffoldMessenger.of(context)
+                .showSnackBar(const SnackBar(content: Text('Error en login')));
+          }
+        });
+        isLoading = false;
+        setState(() {});
+        */
       },
     );
     final googlebtn = SocialLoginButton(

@@ -13,4 +13,19 @@ class EmailAuth {
       return false;
     }
   }
+
+  Future<bool> signInWithEmailAndPassword(
+      {required String email, required String password}) async {
+    try {
+      final UserCredential = await _auth.signInWithEmailAndPassword(
+          email: email, password: password);
+      if (UserCredential.user!.emailVerified) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      return false;
+    }
+  }
 }

@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:flutter_application_1/models/event.dart';
@@ -7,7 +8,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
 class DatabaseHelper {
-  static const versionDB = 4;
+  static const versionDB = 5;
   static const nameDB = "SocialLinces.db";
 
   static Database? _database;
@@ -41,6 +42,13 @@ class DatabaseHelper {
       initDate DATE,
       endDate DATE,
       status INTEGER
+    );
+    ''';
+    db.execute(query);
+    query = '''
+    CREATE TABLE tblFavorites (
+      idFav INTEGER PRIMARY KEY,
+      idMovie INTEGER UNIQUE
     );
     ''';
     db.execute(query);
@@ -85,5 +93,21 @@ class DatabaseHelper {
   Future<int> DEL_EVENT(String tblName, int idEvent) async {
     var conexion = await database;
     return conexion.delete(tblName, where: 'idEvent = ?', whereArgs: [idEvent]);
+  }
+
+  /* PELICULAS */
+  Future<int> DEL_FAV(int idMovie) async {
+    var conexion = await database;
+    return conexion
+        .delete('tblFavorites', where: 'idMovie = ?', whereArgs: [idMovie]);
+  }
+
+  Future<bool> IS_FAV(int idMovie) async {
+    //TODO: CORREGIR
+    var conexion = await database;
+    var result = await conexion.rawQuery(
+        "SELECT EXISTS(SELECT 1 FROM tblFavorites WHERE idMovie=$idMovie) as result; ");
+    Map<String, Object?> mapRead = result.first;
+    return mapRead['result'] == 1;
   }
 }
