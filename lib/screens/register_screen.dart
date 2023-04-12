@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/firebase/email_auth.dart';
 import 'package:flutter_application_1/settings/styles_settings.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:placeholder_images/placeholder_images.dart';
@@ -15,6 +16,8 @@ class RegisterScreen extends StatefulWidget {
 class _RegisterScreenState extends State<RegisterScreen> {
   TextEditingController email =
       TextEditingController(text: 'example@email.com');
+
+  EmailAuth? auth;
 
   TextEditingController password = TextEditingController(text: '12345678');
   TextEditingController name = TextEditingController(text: 'Pedro Paramos');
@@ -175,6 +178,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
       child: InkWell(
         onTap: () {
           validate_textFields();
+          auth?.createUserWithEmailAndPassword(
+              email: email.text, password: password.text);
+          Navigator.pushNamed(context, '/dash');
         },
         child: Container(
           width: MediaQuery.of(context).size.width / 2,
