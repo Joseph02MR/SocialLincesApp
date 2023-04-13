@@ -11,7 +11,9 @@ import 'package:provider/provider.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class VideoDetailsScreen extends StatefulWidget {
-  const VideoDetailsScreen({super.key});
+  VideoDetailsScreen({super.key, required this.movie});
+
+  Popular movie;
 
   @override
   State<VideoDetailsScreen> createState() => _VideoDetailsScreenState();
@@ -20,7 +22,7 @@ class VideoDetailsScreen extends StatefulWidget {
 class _VideoDetailsScreenState extends State<VideoDetailsScreen> {
   DatabaseHelper? database;
   YoutubePlayerController? _controller;
-  late Popular movie;
+  //late Popular movie;
   ApiPopular? apiPopular;
   List<PopularTrailer>? results;
   List<PopularCast>? aux;
@@ -32,6 +34,8 @@ class _VideoDetailsScreenState extends State<VideoDetailsScreen> {
     super.initState();
     apiPopular = ApiPopular();
     database = DatabaseHelper();
+    select_video(widget.movie.id!);
+    update_isFav(widget.movie.id!);
   }
 
   // ignore: non_constant_identifier_names
@@ -67,23 +71,25 @@ class _VideoDetailsScreenState extends State<VideoDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     FlagsProvider flag = Provider.of<FlagsProvider>(context);
+    /*
     if (ModalRoute.of(context)!.settings.arguments != null) {
       movie = ModalRoute.of(context)!.settings.arguments as Popular;
       select_video(movie.id!);
       update_isFav(movie.id!);
     }
 
+*/
     return Scaffold(
         body: Stack(
       children: [
         Hero(
-          tag: 'video_${movie.id}',
+          tag: 'video_${widget.movie.id}',
           child: Container(
             decoration: BoxDecoration(
                 image: DecorationImage(
                     opacity: 0.5,
                     image: NetworkImage(
-                        'https://image.tmdb.org/t/p/w500/${movie.posterPath}'),
+                        'https://image.tmdb.org/t/p/w500/${widget.movie.posterPath}'),
                     fit: BoxFit.cover)),
           ),
         ),
@@ -97,11 +103,11 @@ class _VideoDetailsScreenState extends State<VideoDetailsScreen> {
                   constraints: const BoxConstraints(maxHeight: 200),
                   child: Image(
                       image: NetworkImage(
-                          'https://image.tmdb.org/t/p/w500/${movie.posterPath}')),
+                          'https://image.tmdb.org/t/p/w500/${widget.movie.posterPath}')),
                 ),
                 Expanded(
                     child: Text(
-                  movie.title!,
+                  widget.movie.title!,
                   style: const TextStyle(
                       fontSize: 40, fontWeight: FontWeight.bold),
                 ))
@@ -119,7 +125,7 @@ class _VideoDetailsScreenState extends State<VideoDetailsScreen> {
               child: SingleChildScrollView(
                 scrollDirection: Axis.vertical,
                 child: Text(
-                  movie.overview!,
+                  widget.movie.overview!,
                   style: const TextStyle(fontSize: 18),
                 ),
               ),
@@ -134,7 +140,7 @@ class _VideoDetailsScreenState extends State<VideoDetailsScreen> {
             Row(
               children: [
                 RatingBarIndicator(
-                  rating: movie.voteAverage! / 2,
+                  rating: widget.movie.voteAverage! / 2,
                   itemBuilder: (context, index) => const Icon(
                     Icons.star,
                     color: Colors.amber,
@@ -144,7 +150,7 @@ class _VideoDetailsScreenState extends State<VideoDetailsScreen> {
                   direction: Axis.horizontal,
                 ),
                 Text(
-                  '${movie.voteAverage!}',
+                  '${widget.movie.voteAverage!}',
                   style: const TextStyle(fontSize: 20),
                 )
               ],
@@ -158,14 +164,14 @@ class _VideoDetailsScreenState extends State<VideoDetailsScreen> {
                             backgroundColor:
                                 MaterialStateProperty.all(Colors.red)),
                         onPressed: () {
-                          database?.DEL_FAV(movie.id!).then((value) {
+                          database?.DEL_FAV(widget.movie.id!).then((value) {
                             var msg =
                                 value > 0 ? 'Removida de favoritos' : 'Error';
                             var snackBar = SnackBar(content: Text(msg));
                             ScaffoldMessenger.of(context)
                                 .showSnackBar(snackBar);
                             flag.setFlag_movieList();
-                            update_isFav(movie.id!);
+                            update_isFav(widget.movie.id!);
                           });
                         },
                         child: const Text('Remover de favoritos')),
@@ -179,14 +185,14 @@ class _VideoDetailsScreenState extends State<VideoDetailsScreen> {
                                 MaterialStateProperty.all(Colors.red)),
                         onPressed: () {
                           database?.INSERT('tblFavorites',
-                              {'idMovie': movie.id}).then((value) {
+                              {'idMovie': widget.movie.id}).then((value) {
                             var msg =
                                 value > 0 ? 'Agregada a favoritos' : 'Error';
                             var snackBar = SnackBar(content: Text(msg));
                             ScaffoldMessenger.of(context)
                                 .showSnackBar(snackBar);
                             flag.setFlag_movieList();
-                            update_isFav(movie.id!);
+                            update_isFav(widget.movie.id!);
                           });
                         },
                         child: const Text('Agregar a favoritos')),
@@ -199,7 +205,7 @@ class _VideoDetailsScreenState extends State<VideoDetailsScreen> {
               ),
             ),
             FutureBuilder(
-              future: select_video(movie.id!),
+              future: select_video(widget.movie.id!),
               builder: (context, snapshot) {
                 if (_controller != null) {
                   return YoutubePlayer(
@@ -221,9 +227,9 @@ class _VideoDetailsScreenState extends State<VideoDetailsScreen> {
             ),
             Container(
               margin: const EdgeInsets.symmetric(vertical: 20.0),
-              height: 300.0,
+              height: 150.0,
               child: FutureBuilder(
-                  future: getCast(movie.id!),
+                  future: getCast(widget.movie.id!),
                   builder:
                       (context, AsyncSnapshot<List<PopularCast>?> snapshot) {
                     if (snapshot.hasData) {

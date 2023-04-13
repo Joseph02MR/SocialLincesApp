@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/database/database_help.dart';
 import 'package:flutter_application_1/models/popular.dart';
 import 'package:flutter_application_1/provider/flags_provider.dart';
+import 'package:flutter_application_1/screens/video_details_screen.dart';
 import 'package:provider/provider.dart';
 
 class ItemPopular extends StatefulWidget {
@@ -39,8 +40,21 @@ class _ItemPopularState extends State<ItemPopular> {
         children: [
           InkWell(
               onTap: () {
-                Navigator.of(context, rootNavigator: true)
-                    .pushNamed('/popular_details', arguments: widget.model);
+                // Navigator.of(context, rootNavigator: true)
+                //    .pushNamed('/popular_details', arguments: widget.model);
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => VideoDetailsScreen(
+                        movie: widget.model,
+                      ),
+                    )).then((value) => {
+                      flag.setFlag_movieList(),
+                      setState(() {
+                        update_isFav(widget.model.id!);
+                        flag.setFlag_movieList();
+                      }),
+                    });
               },
               child: Hero(
                 tag: 'video_${widget.model.id}',
@@ -53,6 +67,7 @@ class _ItemPopularState extends State<ItemPopular> {
               )),
           isFav
               ? IconButton(
+                  alignment: Alignment.topRight,
                   onPressed: () {
                     database?.DEL_FAV(widget.model.id!).then((value) {
                       var msg = value > 0 ? 'Removida de favoritos' : 'Error';
@@ -68,6 +83,7 @@ class _ItemPopularState extends State<ItemPopular> {
                     color: Colors.red,
                   ))
               : IconButton(
+                  alignment: Alignment.topRight,
                   onPressed: () {
                     database?.INSERT('tblFavorites',
                         {'idMovie': widget.model.id}).then((value) {
