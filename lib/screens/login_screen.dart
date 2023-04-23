@@ -70,11 +70,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
     final txtPass = TextFormField(
       controller: passController,
+      obscureText: true,
       decoration: const InputDecoration(
           label: Text("Password"), border: OutlineInputBorder()),
     );
 
-    final horizontalSpace = const SizedBox(
+    const horizontalSpace = SizedBox(
       height: 10,
     );
 
@@ -96,37 +97,67 @@ class _LoginScreenState extends State<LoginScreen> {
       buttonType: SocialLoginButtonType.generalLogin,
       onPressed: () {
         isLoading = true;
+        /*
         setState(() {});
         Future.delayed(const Duration(milliseconds: 1000)).then((value) {
           isLoading = false;
           setState(() {});
           Navigator.pushNamed(context, '/onboard');
         });
+        */
 
-        /*
         auth
             .signInWithEmailAndPassword(
                 email: emailController.text, password: passController.text)
             .then((value) {
           if (value) {
-            Navigator.pushNamed(context, '/onboard');
+            isLoading = false;
+            Navigator.pushNamed(context, '/onboard', arguments: auth);
           } else {
+            isLoading = false;
             ScaffoldMessenger.of(context)
                 .showSnackBar(const SnackBar(content: Text('Error en login')));
           }
         });
         isLoading = false;
-        setState(() {});
-        */
       },
     );
     final googlebtn = SocialLoginButton(
-      buttonType: SocialLoginButtonType.twitter,
-      onPressed: () {},
-    );
+        buttonType: SocialLoginButtonType.google,
+        onPressed: () {
+          isLoading = true;
+          auth.signInWithGoogle().then((value) => {
+                if (value)
+                  {
+                    isLoading = false,
+                    Navigator.pushNamed(context, '/onboard', arguments: auth),
+                  }
+                else
+                  {
+                    isLoading = false,
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Error en login'))),
+                  }
+              });
+        });
     final btnGithub = SocialLoginButton(
       buttonType: SocialLoginButtonType.github,
-      onPressed: () {},
+      onPressed: () {
+        isLoading = true;
+        auth.signInWithGitHub().then((value) => {
+              if (value)
+                {
+                  isLoading = false,
+                  Navigator.pushNamed(context, '/onboard', arguments: auth),
+                }
+              else
+                {
+                  isLoading = false,
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Error en login'))),
+                }
+            });
+      },
     );
 
     final imgLogo = Image.asset(
@@ -141,8 +172,8 @@ class _LoginScreenState extends State<LoginScreen> {
       height: 350,
     );
 
-    final tab_Widgets = [
-      Padding(padding: EdgeInsets.only(right: 20)),
+    final tabWidgets = [
+      const Padding(padding: EdgeInsets.only(right: 20)),
       Expanded(
         child: imgLogo,
       ),
@@ -201,7 +232,7 @@ class _LoginScreenState extends State<LoginScreen> {
           btnGithub: btnGithub,
           txtRegister: txtRegister,
           isLoading: isLoading,
-          content: tab_Widgets,
+          content: tabWidgets,
         ),
       ),
     );

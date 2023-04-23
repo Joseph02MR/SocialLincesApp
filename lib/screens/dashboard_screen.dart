@@ -1,12 +1,16 @@
-import 'package:day_night_switcher/day_night_switcher.dart';
+import 'dart:math';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/firebase/email_auth.dart';
 import 'package:flutter_application_1/provider/theme_provider.dart';
 import 'package:flutter_application_1/screens/list_post.dart';
-import 'package:flutter_application_1/settings/styles_settings.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
 class DashboardScreen extends StatefulWidget {
-  DashboardScreen({super.key});
+  DashboardScreen({super.key, required this.userCredential});
+  final EmailAuth userCredential;
 
   @override
   State<DashboardScreen> createState() => _DashboardScreenState();
@@ -14,12 +18,49 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   bool isDarkModeEnabled = false;
+  Map aux = {};
+  var logger = Logger(
+    printer: PrettyPrinter(),
+  );
+
+  @override
+  void initState() {
+    super.initState();
+    logger.i(widget.userCredential.userCredential.user);
+
+    if (widget.userCredential.userCredential.user?.providerData != null) {
+      var data = widget.userCredential.userCredential.user?.providerData[0];
+      aux = Map.from({
+        'email': data?.email,
+        'photoURL': data?.photoURL,
+        'name': data?.displayName,
+        'providerId': data?.providerId
+      });
+    } else {
+      var data = widget.userCredential.userCredential.user;
+      aux = Map.from({
+        'email': data?.email,
+        'photoURL': data?.photoURL,
+        'name': data?.displayName,
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    logout();
+    super.dispose();
+  }
+
+  void logout() async {
+    await widget.userCredential.auth.signOut();
+  }
 
   @override
   Widget build(BuildContext context) {
     ThemeProvider theme = Provider.of<ThemeProvider>(context);
     return Scaffold(
-      body: PostList(),
+      body: const PostList(),
       floatingActionButton: FloatingActionButton.extended(
           onPressed: () {
             Navigator.pushNamed(context, '/add').then((value) {
@@ -41,33 +82,33 @@ class _DashboardScreenState extends State<DashboardScreen> {
       drawer: Drawer(
         child: ListView(
           children: [
-            const UserAccountsDrawerHeader(
+            UserAccountsDrawerHeader(
                 currentAccountPicture: CircleAvatar(
-                    backgroundImage: AssetImage('assets/images/itc_esc.jpg')),
-                accountName: Text('Sunny'),
-                accountEmail: Text('sunny@omori.com')),
+                    backgroundImage: NetworkImage(aux['photoURL'])),
+                accountName: Text(aux['name']),
+                accountEmail: Text(aux['email'])),
             ListTile(
               onTap: () {},
-              title: Text('Práctica 1'),
-              subtitle: Text('Descripción de la práctica'),
-              leading: Icon(Icons.settings),
-              trailing: Icon(Icons.chevron_right),
+              title: const Text('Práctica 1'),
+              subtitle: const Text('Descripción de la práctica'),
+              leading: const Icon(Icons.settings),
+              trailing: const Icon(Icons.chevron_right),
             ),
             ListTile(
               onTap: () {
                 Navigator.pushNamed(context, '/events');
               },
-              title: Text('Eventos'),
-              leading: Icon(Icons.calendar_month),
-              trailing: Icon(Icons.chevron_right),
+              title: const Text('Eventos'),
+              leading: const Icon(Icons.calendar_month),
+              trailing: const Icon(Icons.chevron_right),
             ),
             ListTile(
               onTap: () {
                 Navigator.pushNamed(context, '/popular');
               },
-              title: Text('API videos'),
-              leading: Icon(Icons.movie),
-              trailing: Icon(Icons.chevron_right),
+              title: const Text('API videos'),
+              leading: const Icon(Icons.movie),
+              trailing: const Icon(Icons.chevron_right),
             ),
             /*DayNightSwitcher(
                 isDarkModeEnabled: isDarkModeEnabled,

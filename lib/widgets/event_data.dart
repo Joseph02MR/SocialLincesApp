@@ -33,10 +33,10 @@ class _EventDataState extends State<EventData> {
           width: 10,
           color: event.color,
         ),
-        borderRadius: BorderRadius.all(Radius.circular(10)),
+        borderRadius: const BorderRadius.all(Radius.circular(10)),
       ),
-      padding: EdgeInsets.all(8),
-      margin: EdgeInsets.all(5),
+      padding: const EdgeInsets.all(8),
+      margin: const EdgeInsets.all(5),
       child: Column(
         children: [
           Row(

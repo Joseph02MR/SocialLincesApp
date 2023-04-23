@@ -51,19 +51,24 @@ class _RegisterScreenState extends State<RegisterScreen> {
         : null;
   }
 
-  void validate_textFields() {
+  bool validate_textFields() {
     var textAux = 'Error: hay campos vacíos';
+    bool result = false;
     if (cmfPassword.text != password.text) {
       textAux = 'Error: Las contraseñas no coinciden';
+      result = false;
     } else if (email.text != "" &&
         password.text != "" &&
         cmfPassword.text != "" &&
         name.text != "") {
       textAux = '¡Registro exitoso!';
-
+      result = true;
+      /*
       if (validateEmail(email.text) != null) {
         textAux = 'Error: correo no válido';
+        return false;
       }
+      */
     }
 
     showDialog(
@@ -108,6 +113,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
               ));
         });
+    return result;
   }
 
   void myAlert() {
@@ -118,7 +124,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             title: const Text('Escoge la imagen a subir'),
-            content: Container(
+            content: SizedBox(
               height: MediaQuery.of(context).size.height / 6,
               child: Column(
                 children: [
@@ -177,10 +183,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
       bottom: 40,
       child: InkWell(
         onTap: () {
-          validate_textFields();
-          auth?.createUserWithEmailAndPassword(
-              email: email.text, password: password.text);
-          Navigator.pushNamed(context, '/dash');
+          if (validate_textFields()) {
+            auth.createUserWithEmailAndPassword(
+                email: email.text,
+                password: password.text,
+                name: name.text,
+                photo: image?.path ??
+                    PlaceholderImage.getPlaceholderImageURL(name.text));
+            //Navigator.pushNamed(context, '/dash');
+            Navigator.pop(context);
+          }
         },
         child: Container(
           width: MediaQuery.of(context).size.width / 2,

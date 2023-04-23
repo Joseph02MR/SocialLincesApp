@@ -22,8 +22,8 @@ class AddPostScreen extends StatelessWidget {
     return Scaffold(
       body: Center(
         child: Container(
-          margin: EdgeInsets.all(10),
-          padding: EdgeInsets.all(15),
+          margin: const EdgeInsets.all(10),
+          padding: const EdgeInsets.all(15),
           height: 350,
           decoration: BoxDecoration(
               border: Border.all(color: Colors.black), color: Colors.green),

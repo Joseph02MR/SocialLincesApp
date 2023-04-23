@@ -81,7 +81,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     )
                   ]),
                   body: view
-                      ? MonthView()
+                      ? const MonthView()
                       : ListView.builder(
                           itemCount: snapshot.data!.length,
                           itemBuilder: (context, index) {

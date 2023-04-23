@@ -1,10 +1,13 @@
 import 'package:concentric_transition/concentric_transition.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/firebase/email_auth.dart';
+import 'package:flutter_application_1/screens/dashboard_screen.dart';
 import 'package:flutter_application_1/widgets/onboarding_card.dart';
 import 'package:lottie/lottie.dart';
 
 class OnboardingScreen extends StatelessWidget {
   OnboardingScreen({Key? key}) : super(key: key);
+  late final auth;
 
   final data = [
     OnboardingCardData(
@@ -41,6 +44,9 @@ class OnboardingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (ModalRoute.of(context)!.settings.arguments != null) {
+      auth = ModalRoute.of(context)!.settings.arguments as EmailAuth;
+    }
     return Scaffold(
       body: ConcentricPageView(
         colors: data.map((e) => e.backgroundColor).toList(),
@@ -49,7 +55,13 @@ class OnboardingScreen extends StatelessWidget {
           return OnboardingCard(data: data[index]);
         },
         onFinish: () {
-          Navigator.pushNamed(context, '/dash');
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => DashboardScreen(
+                      userCredential: auth,
+                    )),
+          );
         },
       ),
     );

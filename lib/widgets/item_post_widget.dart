@@ -12,30 +12,30 @@ class ItemPostWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final avatar =
+    const avatar =
         CircleAvatar(backgroundImage: AssetImage('assets/images/cat.png'));
 
-    final txtUser = Text('Le José');
-    final txtDate = Text('06/03/2023');
-    final postImage =
+    const txtUser = Text('Le José');
+    const txtDate = Text('06/03/2023');
+    const postImage =
         Image(height: 100, image: AssetImage('assets/images/logo_itc.png'));
-    final txtDesc = Text('Este es el contenido del post');
-    final iconRate = Icon(Icons.rate_review);
+    const txtDesc = Text('Este es el contenido del post');
+    const iconRate = Icon(Icons.rate_review);
 
     FlagsProvider flag = Provider.of<FlagsProvider>(context);
 
     return Container(
-      margin: EdgeInsets.all(10),
+      margin: const EdgeInsets.all(10),
       height: 250,
       width: double.infinity,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10), color: Colors.blue),
       child: Column(
         children: [
-          Row(
+          const Row(
             children: [avatar, txtUser, txtDate],
           ),
-          Row(
+          const Row(
             children: [postImage, txtDesc],
           ),
           Row(
@@ -73,7 +73,7 @@ class ItemPostWidget extends StatelessWidget {
                               ],
                             ));
                   },
-                  icon: Icon(Icons.delete))
+                  icon: const Icon(Icons.delete))
             ],
           )
         ],

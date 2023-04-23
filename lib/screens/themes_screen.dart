@@ -44,19 +44,19 @@ class _ThemesScreenState extends State<ThemesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final light_theme = ElevatedButton(
+    final lightTheme = ElevatedButton(
       onPressed: () {
         updateTheme(0);
       },
       child: const Text('Tema claro'),
     );
-    final dark_theme = ElevatedButton(
+    final darkTheme = ElevatedButton(
       onPressed: () {
         updateTheme(1);
       },
       child: const Text('Tema oscuro'),
     );
-    final custom_theme = ElevatedButton(
+    final customTheme = ElevatedButton(
       onPressed: () {
         updateTheme(2);
       },
@@ -103,11 +103,11 @@ class _ThemesScreenState extends State<ThemesScreen> {
                   maxLines: 2,
                 ),
                 const Spacer(flex: 3),
-                light_theme,
+                lightTheme,
                 const Spacer(flex: 1),
-                dark_theme,
+                darkTheme,
                 const Spacer(flex: 1),
-                custom_theme,
+                customTheme,
                 const Spacer(flex: 3),
                 SizedBox(
                   child: IconButton(
