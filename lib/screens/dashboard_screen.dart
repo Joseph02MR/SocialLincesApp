@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/firebase/email_auth.dart';
 import 'package:flutter_application_1/provider/theme_provider.dart';
+import 'package:flutter_application_1/screens/list_favorites_cloud.dart';
 import 'package:flutter_application_1/screens/list_post.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
@@ -60,7 +61,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget build(BuildContext context) {
     ThemeProvider theme = Provider.of<ThemeProvider>(context);
     return Scaffold(
-      body: const PostList(),
+      body: const ListFavoritesCloud(),
+      //body: const PostList(),
       floatingActionButton: FloatingActionButton.extended(
           onPressed: () {
             Navigator.pushNamed(context, '/add').then((value) {
@@ -108,6 +110,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
               },
               title: const Text('API videos'),
               leading: const Icon(Icons.movie),
+              trailing: const Icon(Icons.chevron_right),
+            ),
+            ListTile(
+              onTap: () {
+                Navigator.pushNamed(context, '/map');
+              },
+              title: const Text('Práctica Maps'),
+              leading: const Icon(Icons.map),
               trailing: const Icon(Icons.chevron_right),
             ),
             /*DayNightSwitcher(

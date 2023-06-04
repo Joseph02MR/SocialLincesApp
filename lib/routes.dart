@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/screens/add_post_screen.dart';
 import 'package:flutter_application_1/screens/calendar_screen.dart';
+import 'package:flutter_application_1/screens/list_favorites_cloud.dart';
 import 'package:flutter_application_1/screens/list_popular_videos.dart';
+import 'package:flutter_application_1/screens/maps_screen.dart';
 import 'package:flutter_application_1/screens/onboarding_screen.dart';
 import 'package:flutter_application_1/screens/register_screen.dart';
 import 'package:flutter_application_1/screens/themes_screen.dart';
@@ -18,5 +20,7 @@ Map<String, WidgetBuilder> getApplicationRoutes() {
     '/events': (BuildContext context) => const CalendarScreen(),
     '/edit_event': (BuildContext context) => const EventForm(),
     //'/popular_details': (BuildContext context) => const VideoDetailsScreen(),
+    '/favorites_firebase': (BuildContext context) => const ListFavoritesCloud(),
+    '/map': (BuildContext context) => const MapSample()
   };
 }
